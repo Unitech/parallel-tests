@@ -95,7 +95,7 @@ module.exports = class Runner {
       }
       this.failedTests++
       this.addToFinalOutput(command, output)
-      return next(null, false)
+      return next(new Error('test has failed'), false)
     })
   }
 
