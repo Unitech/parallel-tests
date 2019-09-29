@@ -35,7 +35,6 @@ module.exports = class Runner {
     }, (err) => {
       if (err) {
         process.stderr.write(err.message)
-        return process.exit(1)
       }
 
       return this.exit()
