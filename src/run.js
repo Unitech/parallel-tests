@@ -28,11 +28,12 @@ module.exports = class Runner {
     async.eachLimit(this.commands, this.number, (command, next) => {
       let time = new Date().getTime()
       return this.launch(command, (err, success) => {
-        process.stdout.write(`- [WILL RETRY] ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
-        if (err) {
+        if (err || success == false) {
+          process.stdout.write(`- [WILL RETRY] ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
           return this.launch(command, (err, success) => {
             process.stdout.write(`- ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
             if (err) return next(err)
+            if (success == false) return next(new Error(`${command} failed`))
             return next()
           })
         }
