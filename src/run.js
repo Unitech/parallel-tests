@@ -27,18 +27,20 @@ module.exports = class Runner {
     process.stdout.write(`Running ${this.commands.length} tests:\n`)
     async.eachLimit(this.commands, this.number, (command, next) => {
       let time = new Date().getTime()
+
+      process.stdout.write(`- [STARTING] ${command}\n`)
       return this.launch(command, (err, success) => {
-        if (err || success == false) {
+        if (err != null || success == false) {
           process.stdout.write(`- [WILL RETRY] ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
           return this.launch(command, (err, success) => {
-            process.stdout.write(`- ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
+            process.stdout.write(`- [FAILED] ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
             if (err) return next(err)
             if (success == false) return next(new Error(`${command} failed`))
             return next()
           })
         }
 
-        process.stdout.write(`- ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
+        process.stdout.write(`- [SUCCESS] ${command}: ${success ? '\x1B[0;32m✓' : '\x1B[0;31m✗'}\x1B[0m (Time: ${(new Date().getTime() - time) / 1000}s)\n`)
         return next()
       })
     }, (err) => {
@@ -103,7 +105,7 @@ module.exports = class Runner {
       }
       this.failedTests++
       this.addToFinalOutput(command, output)
-      return next(new Error('test has failed'), false)
+      return next(new Error('test suite has failed'), false)
     })
   }
 

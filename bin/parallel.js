@@ -8,7 +8,7 @@ yargs // eslint-disable-line
   .usage('$0 [opts] <commands> [opts]')
   .option('number', {
     alias: 'n',
-    default: 4,
+    default: 1,
     describe: 'how many tests you want to run in parallel'
   })
   .command('<commands>')

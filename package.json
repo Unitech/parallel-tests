@@ -1,5 +1,5 @@
 {
-  "name": "parallel-tests",
+  "name": "parallel-tests-2",
   "version": "1.0.3",
   "description": "Use this CLI to run your tests in parallel",
   "main": "index.js",
